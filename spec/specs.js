@@ -16,6 +16,14 @@ describe("Game", function() {
       expect(testGame.getSequence().length).to.equal(1);
     });
   });
+
+  describe('prototype.updateUserGuess()', function() {
+    it('will add a guess to the user guess array', function() {
+      var testGame = createTestGame();
+      testGame.updateUserGuess('red');
+      expect(testGame.getUserGuess()).to.eql(['red']);
+    });
+  });
 });
 
 var createTestGame = function() {

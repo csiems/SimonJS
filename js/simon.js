@@ -18,3 +18,8 @@ Game.prototype.updateSequence = function() {
 Game.prototype.getUserGuess = function () {
   return this.userGuess;
 };
+
+Game.prototype.updateUserGuess = function (guess) {
+  var userGuess = this.getUserGuess();
+  userGuess.push(guess);
+};
