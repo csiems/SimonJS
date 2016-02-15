@@ -25,6 +25,15 @@ describe("Game", function() {
     });
   });
 
+  describe('prototype.resetUserGuesses()', function() {
+    it('will reset the user guesses', function() {
+      var testGame = createTestGame();
+      testGame.updateUserGuesses('red');
+      testGame.resetUserGuesses();
+      expect(testGame.getUserGuesses()).to.eql([]);
+    });
+  });
+
   describe('prototype.guessMatchesSequence()', function() {
     it('will compare the simon sequence up to the user guess sequence', function() {
       var testGame = createTestGame();

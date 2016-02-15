@@ -4,6 +4,7 @@ var COLORS = ['red', 'yellow', 'green', 'blue'];
 function Game() {
   this.sequence = [];
   this.userGuesses = [];
+  this.turnCount = 0;
 }
 
 Game.prototype.getSequence = function () {
@@ -14,6 +15,7 @@ Game.prototype.updateSequence = function() {
   var newColor = COLORS[Math.floor(Math.random() * COLORS.length)];
   var sequence = this.getSequence();
   sequence.push(newColor);
+  return sequence;
 };
 
 Game.prototype.getUserGuesses = function () {
@@ -23,56 +25,108 @@ Game.prototype.getUserGuesses = function () {
 Game.prototype.updateUserGuesses = function (guess) {
   var userGuesses = this.getUserGuesses();
   userGuesses.push(guess);
+  return userGuesses;
+};
+
+Game.prototype.resetUserGuesses = function () {
+  console.log('resetting, mothereffers')
+  this.userGuesses = [];
+  return this.userGuesses;
 };
 
 Game.prototype.guessMatchesSequence = function () {
   var sequence = this.getSequence();
   var userGuesses = this.getUserGuesses();
-  var lastGuessIndex = userGuesses.length - 1;
-  return userGuesses[lastGuessIndex] === sequence[lastGuessIndex];
+
+  for (var guessIndex in userGuesses) {
+    if (userGuesses[guessIndex] !== sequence[guessIndex]) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+Game.prototype.getTurnCount = function () {
+  return this.turnCount;
+};
+
+Game.prototype.incrementTurnCount = function () {
+  this.turnCount += 1;
+  return this.turnCount;
 };
 
 exports.Game = Game;
 
 },{}],2:[function(require,module,exports){
+var Game = require('./../js/simon.js').Game;
+var TIMEPERFLASH = 800;
+
 $(function() {
-  $('.simon-cell').click(function() {
-    var $clickedCell = $(this);
-    $clickedCell.addClass('flash');
+  var currentGame;
+
+  $('#start-game').click(function() {
+    currentGame = startNewGame();
+  });
+
+  function runOneTurn(game) {
+    var turnCount = game.incrementTurnCount();
+    updateAndDisplaySequence(game);
+    setTimeout(userTurn, turnCount * TIMEPERFLASH, game);
+  }
+
+  function updateAndDisplaySequence(game) {
+    game.updateSequence();
+    var sequence = game.getSequence();
+    var colorIndex = 0;
+    setInterval(function() {
+      var $chosenCell = $('div#' + sequence[colorIndex]);
+      flashChosenCell($chosenCell);
+      colorIndex++;
+      if (colorIndex === sequence.length - 1) {
+        return false;
+      }
+    }, TIMEPERFLASH);
+  }
+
+  function flashChosenCell(target) {
+    target.addClass('flash');
 
     var removeFlashClassFromClickedCell = (function () {
         $(this).removeClass('flash');
-    }).bind($clickedCell);
+    }).bind(target);
 
     setTimeout(removeFlashClassFromClickedCell, 100);
-  });
-});
+  }
 
-var Game = require('./../js/simon.js').Game;
+  function userTurn(game) {
+    $('.simon-cell').click(function() {
+      var $chosenCell = $(this);
+      flashChosenCell($chosenCell);
 
-$(function() {
-  $('#start-game').click(function() {
+      var cellID = this.id;
+      game.updateUserGuesses(cellID);
+
+      if (!game.guessMatchesSequence()) {
+        newGameResponse = window.confirm('Game Over! You survived ' + (game.getTurnCount() - 1) +
+          ' turns. Start a new game?');
+        if (newGameResponse) {
+          currentGame = startNewGame(game);
+        }
+      } else if (game.getUserGuesses().length === game.getTurnCount()) {
+        $('.simon-cell').unbind('click');
+        game.resetUserGuesses();
+        runOneTurn(currentGame);
+      }
+    });
+  }
+
+  function startNewGame(game) {
     var currentGame = new Game();
-    updateAndDisplaySequence(currentGame);
-  });
-
-  function updateAndDisplaySequence(gameToUpdate) {
-    gameToUpdate.updateSequence();
-    var sequence = gameToUpdate.getSequence();
-    for (var colorIndex in sequence) {
-      var $clickedCell = $('div#' + sequence[colorIndex]);
-
-      // var clickTheCell = (function () {
-      //   $(this).trigger('click');
-      // }).bind($clickedCell);
-
-      setTimeout(clickChosenCell, 800, $clickedCell);
-    }
+    $('.simon-cell').unbind('click');
+    runOneTurn(currentGame);
+    return currentGame;
   }
-
-  function clickChosenCell(target) {
-    target.trigger('click');
-  }
-})
+});
 
 },{"./../js/simon.js":1}]},{},[2]);
