@@ -11,7 +11,7 @@ gulp.task('jsBrowserify', function() {
 });
 
 gulp.task('jshint', function() {
-  return gulp.src(['js/*.js', 'specs/specs.js'])
+  return gulp.src(['js/*.js', 'spec/specs.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });
