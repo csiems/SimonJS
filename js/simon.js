@@ -2,7 +2,7 @@ var COLORS = ['red', 'yellow', 'green', 'blue'];
 
 function Game() {
   this.sequence = [];
-  this.userGuess = [];
+  this.userGuesses = [];
 }
 
 Game.prototype.getSequence = function () {
@@ -15,11 +15,18 @@ Game.prototype.updateSequence = function() {
   sequence.push(newColor);
 };
 
-Game.prototype.getUserGuess = function () {
-  return this.userGuess;
+Game.prototype.getUserGuesses = function () {
+  return this.userGuesses;
 };
 
-Game.prototype.updateUserGuess = function (guess) {
-  var userGuess = this.getUserGuess();
-  userGuess.push(guess);
+Game.prototype.updateUserGuesses = function (guess) {
+  var userGuesses = this.getUserGuesses();
+  userGuesses.push(guess);
+};
+
+Game.prototype.guessMatchesSequence = function () {
+  var sequence = this.getSequence();
+  var userGuesses = this.getUserGuesses();
+  var lastGuessIndex = userGuesses.length - 1;
+  return userGuesses[lastGuessIndex] === sequence[lastGuessIndex];
 };

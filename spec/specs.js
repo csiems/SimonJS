@@ -6,7 +6,7 @@ describe("Game", function() {
 
   it("will instantiate with an empty user guess array", function() {
     var testGame = createTestGame();
-    expect(testGame.getUserGuess()).to.be.empty; // jshint ignore:line
+    expect(testGame.getUserGuesses()).to.be.empty; // jshint ignore:line
   });
 
   describe('prototype.updateSequence()', function() {
@@ -17,12 +17,27 @@ describe("Game", function() {
     });
   });
 
-  describe('prototype.updateUserGuess()', function() {
+  describe('prototype.updateUserGuesses()', function() {
     it('will add a guess to the user guess array', function() {
       var testGame = createTestGame();
-      testGame.updateUserGuess('red');
-      expect(testGame.getUserGuess()).to.eql(['red']);
+      testGame.updateUserGuesses('red');
+      expect(testGame.getUserGuesses()).to.eql(['red']);
     });
+  });
+
+  describe('prototype.guessMatchesSequence()', function() {
+    it('will compare the simon sequence up to the user guess sequence', function() {
+      var testGame = createTestGame();
+      testGame.updateSequence();
+      testGame.updateUserGuesses(testGame.getSequence()[0]);
+      expect(testGame.guessMatchesSequence()).to.be.true;
+      testGame.updateSequence();
+      testGame.updateUserGuesses(testGame.getSequence()[1]);
+      expect(testGame.guessMatchesSequence()).to.be.true;
+      testGame.updateSequence();
+      testGame.updateUserGuesses('purple');
+      expect(testGame.guessMatchesSequence()).to.be.false;
+    })
   });
 });
 
