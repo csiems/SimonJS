@@ -30,14 +30,14 @@ describe("Game", function() {
       var testGame = createTestGame();
       testGame.updateSequence();
       testGame.updateUserGuesses(testGame.getSequence()[0]);
-      expect(testGame.guessMatchesSequence()).to.be.true;
+      expect(testGame.guessMatchesSequence()).to.be.true; // jshint ignore:line
       testGame.updateSequence();
       testGame.updateUserGuesses(testGame.getSequence()[1]);
-      expect(testGame.guessMatchesSequence()).to.be.true;
+      expect(testGame.guessMatchesSequence()).to.be.true; // jshint ignore:line
       testGame.updateSequence();
       testGame.updateUserGuesses('purple');
-      expect(testGame.guessMatchesSequence()).to.be.false;
-    })
+      expect(testGame.guessMatchesSequence()).to.be.false; // jshint ignore:line
+    });
   });
 });
 

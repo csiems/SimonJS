@@ -1,0 +1,23 @@
+.simon-cell {
+  height: 300px;
+}
+
+#red {
+  background-color: red;
+}
+
+#green {
+  background-color: green;
+}
+
+#blue{
+  background-color: blue;
+}
+
+#yellow {
+  background-color: yellow;
+}
+
+.flash {
+  border: 5px solid black;
+}
