@@ -30,3 +30,5 @@ Game.prototype.guessMatchesSequence = function () {
   var lastGuessIndex = userGuesses.length - 1;
   return userGuesses[lastGuessIndex] === sequence[lastGuessIndex];
 };
+
+exports.Game = Game;
