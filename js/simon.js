@@ -28,7 +28,6 @@ Game.prototype.updateUserGuesses = function (guess) {
 };
 
 Game.prototype.resetUserGuesses = function () {
-  console.log('resetting, mothereffers')
   this.userGuesses = [];
   return this.userGuesses;
 };

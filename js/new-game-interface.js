@@ -8,6 +8,13 @@ $(function() {
     currentGame = startNewGame();
   });
 
+  function startNewGame(game) {
+    var currentGame = new Game();
+    $('.simon-cell').unbind('click');
+    runOneTurn(currentGame);
+    return currentGame;
+  }
+
   function runOneTurn(game) {
     var turnCount = game.incrementTurnCount();
     updateAndDisplaySequence(game);
@@ -26,16 +33,6 @@ $(function() {
         return false;
       }
     }, TIMEPERFLASH);
-  }
-
-  function flashChosenCell(target) {
-    target.addClass('flash');
-
-    var removeFlashClassFromClickedCell = (function () {
-        $(this).removeClass('flash');
-    }).bind(target);
-
-    setTimeout(removeFlashClassFromClickedCell, 100);
   }
 
   function userTurn(game) {
@@ -60,10 +57,13 @@ $(function() {
     });
   }
 
-  function startNewGame(game) {
-    var currentGame = new Game();
-    $('.simon-cell').unbind('click');
-    runOneTurn(currentGame);
-    return currentGame;
+  function flashChosenCell(target) {
+    target.addClass('flash');
+
+    var removeFlashClassFromClickedCell = (function () {
+        $(this).removeClass('flash');
+    }).bind(target);
+
+    setTimeout(removeFlashClassFromClickedCell, 100);
   }
 });

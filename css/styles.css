@@ -1,23 +1,49 @@
 .simon-cell {
-  height: 300px;
+  min-height: 100px;
+  min-width: 100px;
+  border: 5px solid black;
+  float: left;
+}
+
+@media (min-width: 768px) {
+  .simon-cell {
+    height: 300px;
+    width: 300px;
+  }
+}
+
+.center {
+  margin: 0 auto;
 }
 
 #red {
   background-color: red;
+  border-top-right-radius: 100%;
+  border-top-width: 10px;
+  border-right-width: 10px;
 }
 
 #green {
   background-color: green;
+  border-top-left-radius: 100%;
+  border-top-width: 10px;
+  border-left-width: 10px;
 }
 
 #blue{
   background-color: blue;
+  border-bottom-right-radius: 100%;
+  border-bottom-width: 10px;
+  border-right-width: 10px;
 }
 
 #yellow {
   background-color: yellow;
+  border-bottom-left-radius: 100%;
+  border-bottom-width: 10px;
+  border-left-width: 10px;
 }
 
 .flash {
-  border: 5px solid black;
+  opacity: 0.2;
 }
