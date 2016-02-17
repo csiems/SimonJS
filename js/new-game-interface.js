@@ -1,4 +1,4 @@
-var Game = require('./../js/simon.js').Game;
+var Game = require('./../js/simon.js');
 var TIMEPERFLASH = 800;
 var FLASH_DURATION = 100;
 
@@ -9,16 +9,16 @@ $(function() {
     currentGame = startNewGame();
   });
 
-  function startNewGame(game) {
+  function startNewGame() {
     var currentGame = new Game();
     runOneTurn(currentGame);
     return currentGame;
   }
 
-  function runOneTurn(game) {
-    var turnCount = game.incrementTurnCount();
+  function runOneTurn() {
+    var turnCount = currentGame.incrementTurnCount();
     $('.simon-cell').unbind('click');
-    updateAndDisplaySequence(game);
+    updateAndDisplaySequence();
     delayPlayerTurnWhileComputerPlays(turnCount);
   }
 
@@ -36,7 +36,7 @@ $(function() {
   }
 
   function delayPlayerTurnWhileComputerPlays(turnCount) {
-    setTimeout(userTurn, turnCount * TIMEPERFLASH, game);
+    setTimeout(userTurn, turnCount * TIMEPERFLASH);
   }
 
   function flashChosenCell(target) {
@@ -54,7 +54,7 @@ $(function() {
     flashChosenCell($chosenCell);
   }
 
-  function userTurn(game) {
+  function userTurn() {
     $('.simon-cell').click(onUserClick);
   }
 
@@ -63,7 +63,7 @@ $(function() {
     flashChosenCell($chosenCell);
 
     var cellID = this.id;
-    game.updateUserGuesses(cellID);
+    currentGame.updateUserGuesses(cellID);
 
     if (userGuessIsWrong()) {
       gameOver();
@@ -73,7 +73,7 @@ $(function() {
   });
 
   function gameOver() {
-    newGameResponse = window.confirm('Game Over! You survived ' + (game.getTurnCount() - 1) +
+    newGameResponse = window.confirm('Game Over! You survived ' + (currentGame.getTurnCount() - 1) +
       ' turns. Start a new game?');
     if (newGameResponse) {
       setTimeout(startNewGame(), TIMEPERFLASH;
@@ -84,4 +84,5 @@ $(function() {
    currentGame.resetUserGuesses();
    setTimeout(runOneTurn());
  }
+
 });
