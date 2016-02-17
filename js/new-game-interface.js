@@ -1,5 +1,6 @@
 var Game = require('./../js/simon.js').Game;
 var TIMEPERFLASH = 800;
+var FLASH_DURATION = 100;
 
 $(function() {
   var currentGame;
@@ -10,24 +11,23 @@ $(function() {
 
   function startNewGame(game) {
     var currentGame = new Game();
-    $('.simon-cell').unbind('click');
     runOneTurn(currentGame);
     return currentGame;
   }
 
   function runOneTurn(game) {
     var turnCount = game.incrementTurnCount();
+    $('.simon-cell').unbind('click');
     updateAndDisplaySequence(game);
-    setTimeout(userTurn, turnCount * TIMEPERFLASH, game);
+    delayPlayerTurnWhileComputerPlays(turnCount);
   }
 
-  function updateAndDisplaySequence(game) {
-    game.updateSequence();
-    var sequence = game.getSequence();
+  function updateAndDisplaySequence() {
+    var sequence = currentGame.updateSequence();
+
     var colorIndex = 0;
     setInterval(function() {
-      var $chosenCell = $('div#' + sequence[colorIndex]);
-      flashChosenCell($chosenCell);
+      chooseAndFlashCell(sequence[colorIndex]);
       colorIndex++;
       if (colorIndex === sequence.length - 1) {
         return false;
@@ -35,26 +35,8 @@ $(function() {
     }, TIMEPERFLASH);
   }
 
-  function userTurn(game) {
-    $('.simon-cell').click(function() {
-      var $chosenCell = $(this);
-      flashChosenCell($chosenCell);
-
-      var cellID = this.id;
-      game.updateUserGuesses(cellID);
-
-      if (!game.guessMatchesSequence()) {
-        newGameResponse = window.confirm('Game Over! You survived ' + (game.getTurnCount() - 1) +
-          ' turns. Start a new game?');
-        if (newGameResponse) {
-          currentGame = startNewGame(game);
-        }
-      } else if (game.getUserGuesses().length === game.getTurnCount()) {
-        $('.simon-cell').unbind('click');
-        game.resetUserGuesses();
-        runOneTurn(currentGame);
-      }
-    });
+  function delayPlayerTurnWhileComputerPlays(turnCount) {
+    setTimeout(userTurn, turnCount * TIMEPERFLASH, game);
   }
 
   function flashChosenCell(target) {
@@ -64,6 +46,42 @@ $(function() {
         $(this).removeClass('flash');
     }).bind(target);
 
-    setTimeout(removeFlashClassFromClickedCell, 100);
+    setTimeout(removeFlashClassFromClickedCell, FLASH_DURATION);
   }
+
+  function chooseAndFlashCell(target) {
+    var $chosenCell = $('div#' + target);
+    flashChosenCell($chosenCell);
+  }
+
+  function userTurn(game) {
+    $('.simon-cell').click(onUserClick);
+  }
+
+  function onUserClick() {
+    var $chosenCell = $(this);
+    flashChosenCell($chosenCell);
+
+    var cellID = this.id;
+    game.updateUserGuesses(cellID);
+
+    if (userGuessIsWrong()) {
+      gameOver();
+    } else if (turnCompleted()) {
+      startNextTurn();
+    }
+  });
+
+  function gameOver() {
+    newGameResponse = window.confirm('Game Over! You survived ' + (game.getTurnCount() - 1) +
+      ' turns. Start a new game?');
+    if (newGameResponse) {
+      setTimeout(startNewGame(), TIMEPERFLASH;
+    }
+  }
+
+  function startNextTurn() {
+   currentGame.resetUserGuesses();
+   setTimeout(runOneTurn());
+ }
 });
