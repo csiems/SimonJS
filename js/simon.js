@@ -32,7 +32,7 @@ Game.prototype.resetUserGuesses = function () {
   return this.userGuesses;
 };
 
-Game.prototype.guessMatchesSequence = function () {
+Game.prototype.userGuessMatchesSequence = function () {
   var sequence = this.getSequence();
   var userGuesses = this.getUserGuesses();
 
@@ -45,6 +45,10 @@ Game.prototype.guessMatchesSequence = function () {
   return true;
 };
 
+Game.prototype.userGuessIsWrong = function() {
+  !game.guessMatchesSequence();
+}
+
 Game.prototype.getTurnCount = function () {
   return this.turnCount;
 };
@@ -53,5 +57,9 @@ Game.prototype.incrementTurnCount = function () {
   this.turnCount += 1;
   return this.turnCount;
 };
+
+Game.prototype.turnCompleted = function() {
+  game.getUserGuesses().length === game.getTurnCount();
+}
 
 exports.Game = Game;
